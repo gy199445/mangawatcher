@@ -5,6 +5,7 @@ from urllib2 import URLError
 from HTMLParser import HTMLParser
 from pushbullet import Pushbullet
 from pushbullet_key import api_key
+import os
 
 #set up
 urls=['m.seemh.com/comic/16739/',]
@@ -35,7 +36,7 @@ def search_episode(page):
     return episode names and urls(partial)
     '''
     chapter_block = r'<div class="chapter-list" id="chapterList"><ul>(.*?)</ul></div>'
-    episode_block = r'<li><a href="(.*?)"><b>(.*?)</b></a></li>'
+    episode_block = r'<a href="(.*?)"><b>(.*?)</b>(?:<i class="new-icon"></i>){0,1}</a>'
     chapter_pattern = re.compile(chapter_block)
     episode_pattern = re.compile(episode_block)
     chapter = chapter_pattern.findall(page)
@@ -43,6 +44,8 @@ def search_episode(page):
     return episode
 
 if __name__ == '__main__':
+    #set current folder as working directory
+    os.chdir(os.getcwd())
     argparser = argparse.ArgumentParser()
     argparser.add_argument("-u","--update",action='store_true',help='Do not push, just update the watched episodes')
     args = argparser.parse_args()
