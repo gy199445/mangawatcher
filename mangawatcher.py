@@ -11,6 +11,7 @@ import os
 urls=['m.seemh.com/comic/16739/',]
 user_agent = 'Mozilla/5.0 (Windows NT 6.1; Win64; x64)'
 headers = {'User-Agent':user_agent}
+os.chdir(os.path.dirname(os.path.realpath(__file__)))
 db = './manga.db'
 pb = Pushbullet(api_key)
 
@@ -44,8 +45,6 @@ def search_episode(page):
     return episode
 
 if __name__ == '__main__':
-    #set current folder as working directory
-    os.chdir(os.getcwd())
     argparser = argparse.ArgumentParser()
     argparser.add_argument("-u","--update",action='store_true',help='Do not push, just update the watched episodes')
     args = argparser.parse_args()
