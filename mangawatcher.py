@@ -55,21 +55,18 @@ if __name__ == '__main__':
     con_tmp = sqlite3.connect(":memory:")
     c_tmp = con_tmp.cursor()
     c_tmp.execute("create table tmp (url text, episode text, manga_name text);")
-    while True:
-        for row in c.execute('select url,name from WatchList;'):
-            try:
-                print row
-                request = urllib2.Request(row[0],None,headers)
-                response = urllib2.urlopen(request)
-                page = response.read()
-                episode = search_episode(page)
-                for e in episode:
-                    #save to tmp table
-                    c_tmp.execute("insert into tmp values(?,?,?)",(e[0].decode('utf8'),e[1].decode('utf8'), row[1]))
-            except URLError as e:
-                print e.reason
-        else:
-            break
+    for row in c.execute('select url,name from WatchList;'):
+        try:
+            print row
+            request = urllib2.Request(row[0],None,headers)
+            response = urllib2.urlopen(request)
+            page = response.read()
+            episode = search_episode(page)
+            for e in episode:
+                #save to tmp table
+                c_tmp.execute("insert into tmp values(?,?,?)",(e[0].decode('utf8'),e[1].decode('utf8'), row[1]))
+        except URLError as e:
+            print e.reason
     #check if pushed
     c_tmp.execute("select * from tmp")
     while True:
